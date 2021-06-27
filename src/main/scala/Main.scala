@@ -44,6 +44,12 @@ case class AnimalNotFound(
   right = no
 )
 
+case class NextInteraction(
+                            message: String,
+                            rootNode: BinTreeNode,
+                            actualNode: BinTreeNode
+                          )
+
 object AnimalGame:
   def build(): AnimalGame = {
     val newCharacteristic =
@@ -66,11 +72,11 @@ class AnimalGame(val root : CharacteristicGuess):
     case _ => false
   }
 
-  def start(): Unit = {
+  def start(): NextInteraction = NextInteraction(message = "Pense em um animal para iniciar o jogo e pressione enter", binTreeNode = root)
 
-  }
-
-  def nextRound(answer: String): Unit = {
+  def nextRound(nextInteraction: NextInteraction): Unit = {
+    NextInteraction(message=nextInteraction.binTreeNode.statement, nextInteraction.binTreeNode, nextInteraction.binTreeNode)
+    
 
   }
 

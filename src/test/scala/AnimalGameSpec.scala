@@ -11,12 +11,15 @@ class AnimalGameSpec extends AnyFreeSpec:
     }
 
     "When playing the game" - {
+      val nextInteraction = animalGame.start()
 
-      animalGame.start()
+      "Given a ready game I start the interaction" in {
+        assert("Pense em um animal para iniciar o jogo e pressione enter" === nextInteraction.message)
+      }
 
-      "When first move is yes" - {
-        animalGame.nextRound("yes")
-        //assert(animalGame.actualNode.yes.isInstanceOf[AnimalGuess])
+      "Given the first interaction I receive the characteristic question " in {
+        val newNextInteraction = animalGame.nextRound(nextInteraction)
+        assert(newNextInteraction.message = "Does the animal meow?")
       }
     }
   }
