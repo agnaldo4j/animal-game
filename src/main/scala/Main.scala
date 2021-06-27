@@ -54,11 +54,24 @@ object AnimalGame:
     new AnimalGame(newCharacteristic)
   }
 
-class AnimalGame(
-                val root : CharacteristicGuess
-                ):
-  def isReady(): Boolean = {
-    true
+class AnimalGame(val root : CharacteristicGuess):
+
+  def isAnimalGuess(animalGuess: BinTreeNode) = animalGuess match {
+    case AnimalGuess(_,_,_) => true
+    case _ => false
+  }
+
+  def isReady(): Boolean = root match {
+    case CharacteristicGuess(_, yes, no) if (isAnimalGuess(yes) && isAnimalGuess(no)) => true
+    case _ => false
+  }
+
+  def start(): Unit = {
+
+  }
+
+  def nextRound(answer: String): Unit = {
+
   }
 
 //@main def hello: Unit = {
