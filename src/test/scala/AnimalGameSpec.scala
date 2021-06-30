@@ -11,15 +11,33 @@ class AnimalGameSpec extends AnyFreeSpec:
     }
 
     "When playing the game" - {
-      val nextInteraction = animalGame.start()
+      val (startGameMessage, gameRound1) = animalGame.start()
 
-      "Given a ready game I start the interaction" in {
-        assert("Pense em um animal para iniciar o jogo e pressione enter" === nextInteraction.message)
+      "Given a ready game a start must return a proper message and a newGame instance" in {
+        assert("Pense em um animal para iniciar o jogo e pressione enter" === startGameMessage)
+        assert(gameRound1.isInstanceOf[NewGame])
       }
 
-      "Given the first interaction I receive the characteristic question " in {
-        val newNextInteraction = animalGame.nextRound(nextInteraction)
-        assert(newNextInteraction.message = "Does the animal meow?")
+      "With the very first game round, the round question must match the root node question" in {
+        assert(gameRound1.getQuestion() === "Does the animal meow?")
+      }
+
+      "From the first game round, answer `yes` goes to the Cat Animal" in {
+        val gameRound2 = gameRound1.nextRound(answer = "yes")
+        assert(gameRound2.getQuestion() === "Is it a cat?")
+      }
+
+      "From the first game round, answer `no` goes to the Dog Animal" in {
+        val gameRound2 = gameRound1.nextRound(answer = "no")
+        assert(gameRound2.getQuestion() === "Is the animal a dog?!?")
+      }
+
+      "Referential transparency check" in {
+        assert(gameRound1.getQuestion() === "Does the animal meow?")
       }
     }
   }
+
+// startGame()
+// askQuestion()
+// checkAnswer()

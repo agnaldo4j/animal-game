@@ -44,23 +44,19 @@ case class AnimalNotFound(
   right = no
 )
 
-case class NextInteraction(
-                            message: String,
-                            rootNode: BinTreeNode,
-                            actualNode: BinTreeNode
-                          )
+case class NextInteraction(message: String, rootNode: BinTreeNode, actualNode: BinTreeNode)
 
 object AnimalGame:
   def build(): AnimalGame = {
     val newCharacteristic =
-         CharacteristicGuess(characteristic = "Does the animal meow?",
-         yes = AnimalGuess(characteristic =  "Is it a cat?"),
-         no = AnimalGuess(characteristic = "Is the animal a dog?!?")
+      CharacteristicGuess(characteristic = "Does the animal meow?",
+       yes = AnimalGuess(characteristic =  "Is it a cat?"),
+       no = AnimalGuess(characteristic = "Is the animal a dog?!?")
       )
     new AnimalGame(newCharacteristic)
   }
 
-class AnimalGame(val root : CharacteristicGuess):
+class AnimalGame(val root : BinTreeNode):
 
   def isAnimalGuess(animalGuess: BinTreeNode) = animalGuess match {
     case AnimalGuess(_,_,_) => true
@@ -72,12 +68,23 @@ class AnimalGame(val root : CharacteristicGuess):
     case _ => false
   }
 
-  def start(): NextInteraction = NextInteraction(message = "Pense em um animal para iniciar o jogo e pressione enter", binTreeNode = root)
+  def start(): (String, NewGame) = {
+    ("Pense em um animal para iniciar o jogo e pressione enter", new NewGame(root, root)) // back to initial game state
+  }
 
-  def nextRound(nextInteraction: NextInteraction): Unit = {
-    NextInteraction(message=nextInteraction.binTreeNode.statement, nextInteraction.binTreeNode, nextInteraction.binTreeNode)
-    
+//  def nextRound(nextInteraction: NextInteraction): NextInteraction = {
+//    NextInteraction(
+//      message=nextInteraction.actualNode.statement,
+//      nextInteraction.actualNode,
+//      nextInteraction.actualNode
+//    )
+//  }
 
+class NewGame(val rootNode : BinTreeNode, val currentNode : BinTreeNode):
+  def getQuestion(): String = currentNode.statement
+  def nextRound(answer: String):NewGame = answer match {
+    case "yes" => new NewGame(rootNode, currentNode.left)
+    case "no" => new NewGame(rootNode, currentNode.right)
   }
 
 //@main def hello: Unit = {
