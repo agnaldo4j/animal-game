@@ -25,11 +25,11 @@ case class AnimalGuess(
 )
 
 case class AnimalFound(
-  val name: String = "You win!",
+  val message: String = "You win!",
   val yes: BinTreeNode = null,
   val no: BinTreeNode = null
 ) extends BinTreeNode(
-  statement = name,
+  statement = message,
   left = yes,
   right = no
 )
@@ -44,7 +44,7 @@ case class AnimalNotFound(
   right = no
 )
 
-case class NextInteraction(message: String, rootNode: BinTreeNode, actualNode: BinTreeNode)
+// case class NextInteraction(message: String, rootNode: BinTreeNode, actualNode: BinTreeNode)
 
 object AnimalGame:
   def build(): AnimalGame = {
@@ -81,37 +81,22 @@ class AnimalGame(val root : BinTreeNode):
 //  }
 
 class NewGame(val rootNode : BinTreeNode, val currentNode : BinTreeNode):
-  def getQuestion(): String = currentNode.statement
-  def nextRound(answer: String):NewGame = answer match {
-    case "yes" => new NewGame(rootNode, currentNode.left)
-    case "no" => new NewGame(rootNode, currentNode.right)
+  def getStatement(): String = currentNode.statement
+
+  def nextRound(answer: String ):NewGame = answer match {
+    case "yes" if (isCharacteristicGuess(currentNode))  => new NewGame(rootNode, currentNode.left)
+    case "yes" if (isAnimalGuess(currentNode))  => new NewGame(rootNode, currentNode.left)
+    case "no" if (isCharacteristicGuess(currentNode)) => new NewGame(rootNode, currentNode.right)
+    case "no" if (isAnimalGuess(currentNode)) => new NewGame(rootNode, currentNode.right)
   }
 
-//@main def hello: Unit = {
-//  println("Animal Game!")
+  def isCharacteristicGuess(characteristicGuess: BinTreeNode) = characteristicGuess match {
+    case CharacteristicGuess(_,_,_) => true
+    case _ => false
+  }
 
-//  val dog = AnimalGuess("Is the animal a dog?!?")
-//  println(s"$dog")
-//
-//  val yes = dog.yes match {
-//    case AnimalFound(name, yes, no) => name
-//    case _ => println("Error!")
-//  }
-//
-//  val no = dog.no match {
-//    case AnimalNotFound(message, yes, no) => message
-//    case _ => println("Error!")
-//  }
-//
-//  println(s"yes $yes, no $no")
+  def isAnimalGuess(characteristicGuess: BinTreeNode) = characteristicGuess match {
+    case AnimalGuess(_,_,_) => true
+    case _ => false
+  }
 
-
-
- // val newCharacteristic =
-//     CharacteristicGuess(characteristic = "Does the animal meow?",
-//     yes = AnimalGuess(characteristic =  "Is it a cat?"),
-//      no = AnimalGuess(characteristic = "Is the animal a dog?!?")
-//  )
-//
-//  println(newCharacteristic)
-//}
